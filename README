@@ -1,0 +1,10 @@
+Somewhere on the devprep machine, a TCP port is open, soliciting a service to
+be communicated with.  Find the open port, reverse engineer the service, and
+build a rudimentary client (level of detail is up to you.  Hell, implementation
+language is up to you.)
+
+Name your project uct on github.  Your client should be called uct.
+
+The port may not be open from the outside world; you may need to be on the
+devprep machine to access it.
+

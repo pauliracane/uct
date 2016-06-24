@@ -46,13 +46,24 @@ int main ( void )
 	char buffer[200] = {"\0"};
 	char quitval[] = "QUIT";
 	ssize_t read_status;
-	/*
+	
 	struct passwd *p = getpwuid(getuid());
 	char * name = p->pw_name;
-	char * USERCommand = strcat("USER ", name);
-	USERCommand = strcat(USERCommand, " w 0 ");
-	USERCommand = strcat(USERCommand, name);
-	char * NICK = strcat("NICK ", name);
+	char USERCommand[200] = {'\0'};
+	strcat(USERCommand, "USER");
+	strcat(USERCommand, name);
+	strcat(USERCommand, " w 0 ");
+	strcat(USERCommand, name);
+	char NICK[100] = {'\0'};
+	strcpy(NICK, "NICK ");
+	strcat(NICK, name);
+
+	sleep(2);
+	while((read_status = read(sd, buffer, sizeof(buffer)-1)) == 199)
+	{
+		buffer[read_status] = '\0';
+		printf("%s", buffer);
+	}
 
 	if ( write ( sd, USERCommand, strlen(name)) < 0 )
 	{
@@ -63,12 +74,12 @@ int main ( void )
 	}
 	if ( write ( sd, NICK, strlen(NICK)) < 0 )
 	{
-			perror("Could not grab nickname.");
+			perror("Could not write nickname.");
 			close(sd);
 			freeaddrinfo(results);
 			return 7;
 	}
-	*/
+	
 	while ( strcmp(input, quitval ))
 	{
 		fgets(input, 200, stdin);

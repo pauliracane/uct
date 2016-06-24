@@ -6,9 +6,11 @@
 #include <unistd.h>
 #include <ctype.h>
 
-#include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
+
+#include <stdlib.h>
+#include <signal.h>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -44,7 +46,7 @@ int main ( void )
 	}
 	char input[201] = {"HELP"};
 	char buffer[200] = {"\0"};
-	char quitval[] = "QUIT";
+	char quitval[] = "QUIT\n";
 	ssize_t read_status;
 	
 	struct passwd *p = getpwuid(getuid());
@@ -89,7 +91,7 @@ int main ( void )
 	
 	if (pid == 0)
 	{
-		while ( strcmp(input, quitval ))
+		while (strcmp(input, quitval) != 0)
 		{
 			fgets(input, 200, stdin);
 			if(write(sd, input, strlen(input)) < 0) 
@@ -99,8 +101,10 @@ int main ( void )
 				freeaddrinfo(results);
 				return 5;
 			}
-		}	
+		}
+
 		close(sd);
+		kill(pid, SIGKILL);
 	}
 	else if (pid > 0)
 	{

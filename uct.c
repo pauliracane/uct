@@ -114,8 +114,6 @@ int main ( void )
 			}
 			if ( read_status > 0 )
 			{
-				printf("%s", buffer);
-
 				if (buffer[0] == 'P' && buffer[1] == 'I' && \
 					buffer[2] == 'N' && buffer[3] == 'G')
 				{
@@ -132,8 +130,10 @@ int main ( void )
 						freeaddrinfo(results);
 						return 500;
 					}
+					memset(buffer, '\0', strlen(buffer));
 				}
 
+				printf("%s", buffer);
 				printf("\n");
 			}
 			memset(buffer, '\0', strlen(buffer));

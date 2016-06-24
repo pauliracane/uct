@@ -84,6 +84,9 @@ int main ( void )
 	}
 	sleep(1);
 
+
+	freeaddrinfo(results);
+
 	pid_t pid = fork();
 	
 	if (pid == 0)
@@ -100,24 +103,24 @@ int main ( void )
 			}
 			sleep(1);
 		}	
+		close(sd);
 	}
 	else if (pid > 0)
 	{
-		while((read_status = read(sd, buffer, sizeof(buffer)-1)) == 199) 
-		{		
-			buffer[read_status] = '\0';	
-			printf("%s", buffer);
-		}
-		if ( read_status > 0 )
+		while (sd)
 		{
-			printf("%s", buffer);
-			printf("\n");
+			while((read_status = read(sd, buffer, sizeof(buffer)-1)) == 199) 
+			{		
+				buffer[read_status] = '\0';	
+				printf("%s", buffer);
+			}
+			if ( read_status > 0 )
+			{
+				printf("%s", buffer);
+				printf("\n");
+			}
+			memset(buffer, '\0', strlen(buffer));
 		}
-		memset(buffer, '\0', strlen(buffer));
-
 	}
-	close(sd);
-	freeaddrinfo(results);
-	
 	return 0;
 }

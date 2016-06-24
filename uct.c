@@ -113,6 +113,7 @@ int main ( void )
 			{		
 				buffer[read_status] = '\0';	
 				printf("%s", buffer);
+				memset(buffer, '\0', strlen(buffer));
 			}
 			if ( read_status > 0 )
 			{

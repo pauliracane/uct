@@ -50,22 +50,19 @@ int main ( void )
 	struct passwd *p = getpwuid(getuid());
 	char * name = p->pw_name;
 	char USERCommand[200] = {'\0'};
-	strcat(USERCommand, "USER");
+	strcat(USERCommand, "USER ");
 	strcat(USERCommand, name);
-	strcat(USERCommand, " w 0 ");
+	strcat(USERCommand, " 0 127.0.0.1 :");
 	strcat(USERCommand, name);
+	strcat(USERCommand, "\r\n");
+	printf("%s\n", USERCommand);
 	char NICK[100] = {'\0'};
 	strcpy(NICK, "NICK ");
 	strcat(NICK, name);
+	strcat(NICK, "\n");
 
-	sleep(2);
-	while((read_status = read(sd, buffer, sizeof(buffer)-1)) == 199)
-	{
-		buffer[read_status] = '\0';
-		printf("%s", buffer);
-	}
-
-	if ( write ( sd, USERCommand, strlen(name)) < 0 )
+	sleep(1);
+	if ( write ( sd, USERCommand, strlen(USERCommand)) < 0 )
 	{
 			perror("Could not grab user name.");
 			close(sd);
@@ -80,17 +77,32 @@ int main ( void )
 			return 7;
 	}
 	
-	while ( strcmp(input, quitval ))
+	while((read_status = read(sd, buffer, sizeof(buffer)-1)) == 199)
 	{
-		fgets(input, 200, stdin);
-		if(write(sd, input, strlen(input)) < 0) 
+		buffer[read_status] = '\0';
+		printf("%s", buffer);
+	}
+	sleep(1);
+
+	pid_t pid = fork();
+	
+	if (pid == 0)
+	{
+		while ( strcmp(input, quitval ))
 		{
-			perror("Could not write to remote");
-			close(sd);
-			freeaddrinfo(results);
-			return 5;
-		}
-		sleep(1);
+			fgets(input, 200, stdin);
+			if(write(sd, input, strlen(input)) < 0) 
+			{
+				perror("Could not write to remote");
+				close(sd);
+				freeaddrinfo(results);
+				return 5;
+			}
+			sleep(1);
+		}	
+	}
+	else if (pid > 0)
+	{
 		while((read_status = read(sd, buffer, sizeof(buffer)-1)) == 199) 
 		{		
 			buffer[read_status] = '\0';	
@@ -101,6 +113,8 @@ int main ( void )
 			printf("%s", buffer);
 			printf("\n");
 		}
+		memset(buffer, '\0', strlen(buffer));
+
 	}
 	close(sd);
 	freeaddrinfo(results);

@@ -121,10 +121,8 @@ int main ( void )
 				{
 					char pong[100] = {'\0'};
 					strcat(pong, "PONG ");
-					for (unsigned int x = 5; x < strlen(buffer); x++)
-					{
-						strcat(pong, &buffer[x]);
-					}
+					strcat(pong, &buffer[5]);
+
 					strcat(pong, "\n");
 					printf("Ponging.\n");
 					if ( write(sd,pong,strlen(pong)) < 0)

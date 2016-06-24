@@ -57,10 +57,11 @@ int main ( void )
 	strcat(USERCommand, name);
 	strcat(USERCommand, "\r\n");
 	printf("%s\n", USERCommand);
-	char NICK[100] = {'\0'};
-	strcpy(NICK, "NICK ");
-	strcat(NICK, name);
-	strcat(NICK, "\n");
+	char NICK[15] = {'\0'};
+	strncpy(NICK, "NICK ", 6);
+	strncat(NICK, name, 9);
+	NICK[14] = '\n';
+	NICK[15] = '\0';
 
 	sleep(1);
 	if ( write ( sd, USERCommand, strlen(USERCommand)) < 0 )
@@ -77,7 +78,7 @@ int main ( void )
 			freeaddrinfo(results);
 			return 7;
 	}
-	
+	sleep(2);
 	while((read_status = read(sd, buffer, sizeof(buffer)-1)) == 199)
 	{
 		buffer[read_status] = '\0';

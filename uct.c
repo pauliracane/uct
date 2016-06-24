@@ -46,7 +46,6 @@ int main ( void )
 	}
 	char input[201] = {"HELP"};
 	char buffer[200] = {"\0"};
-	char quitval[] = "QUIT\n";
 	ssize_t read_status;
 	
 	struct passwd *p = getpwuid(getuid());
@@ -91,7 +90,8 @@ int main ( void )
 	
 	if (pid == 0)
 	{
-		while (strcmp(input, quitval) != 0)
+		while (strcmp(input, "Quit\n") != 0 && strcmp(input,"QUIT\n") != 0 \
+				&& strcmp(input, "quit\n") != 0)
 		{
 			fgets(input, 200, stdin);
 			if(write(sd, input, strlen(input)) < 0) 
@@ -104,7 +104,7 @@ int main ( void )
 		}
 
 		close(sd);
-		kill(pid, SIGKILL);
+		kill(pid, SIGHUP);
 	}
 	else if (pid > 0)
 	{

@@ -122,7 +122,7 @@ int main ( void )
 					strcat(pong, &buffer[5]);
 
 					strcat(pong, "\n");
-					printf("Ponging.\n");
+					//printf("Ponging.\n");
 					if ( write(sd,pong,strlen(pong)) < 0)
 					{
 						perror("Could not write to remote");

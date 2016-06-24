@@ -82,8 +82,6 @@ int main ( void )
 		buffer[read_status] = '\0';
 		printf("%s", buffer);
 	}
-	sleep(1);
-
 
 	freeaddrinfo(results);
 
@@ -101,7 +99,6 @@ int main ( void )
 				freeaddrinfo(results);
 				return 5;
 			}
-			sleep(1);
 		}	
 		close(sd);
 	}
@@ -118,6 +115,27 @@ int main ( void )
 			if ( read_status > 0 )
 			{
 				printf("%s", buffer);
+
+				if (buffer[0] == 'P' && buffer[1] == 'I' && \
+					buffer[2] == 'N' && buffer[3] == 'G')
+				{
+					char pong[100] = {'\0'};
+					strcat(pong, "PONG ");
+					for (unsigned int x = 5; x < strlen(buffer); x++)
+					{
+						strcat(pong, &buffer[x]);
+					}
+					strcat(pong, "\n");
+					printf("Ponging.\n");
+					if ( write(sd,pong,strlen(pong)) < 0)
+					{
+						perror("Could not write to remote");
+						close(sd);
+						freeaddrinfo(results);
+						return 500;
+					}
+				}
+
 				printf("\n");
 			}
 			memset(buffer, '\0', strlen(buffer));

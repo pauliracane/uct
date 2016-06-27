@@ -1,25 +1,33 @@
 
 	Project Goal:
-		Create a program that can interact with a "Tcp server on the local box.  Server ended up being a irc server.
+	Somewhere on the devprep machine, a TCP port is open, soliciting a service to be communicated with.  Find the open port, reverse engineer the service, and build a rudimentary client 
+
 	Considerations:
-		Forking?  
-		Threading?  
-		What should it look like?  
+		Forking -- As that's what we've covered, and the constant input and output that may or may not be dependant on each other
+		Multi-Threading -- Potentially in place of Forking
+		What should it look like?  Telnet client, as that's the most redily available tool I have to compare against.
 		Time constraints?  
-		Do I know how to do anything that can help?
 
 	Initial Design:
-		Initial design, as with most of my c programs, followed an AITOI pattern.  That means As I thought of it, it was added in.  This unfortunately resulted in a larger main than the program called for.  Regarding the .h files that were used, 3 were used to create the socket, 1 was used to kill the child process, 2 were used to pull the username, and others were there because I was afraid to remove them.
+		Regarding the .h files that were used, 3 were used to create the socket, 1 was used to kill the child process, 2 were used to pull the username, and others were there because I was afraid to remove them.
+
+		As requirements were to make a program that interacts with a TCP Service, I opted for essentially a telnet client. This will make it more versatile (Minus currently hardcorded values) for future use, and more easily portable to different services.
+
+		
 	Data Flow:
-		Set up socket to log in -> Pull information needed to log in -> Log in to server -> Parse through information as passed in a nearly endless loop. -> When QUIT is sent in some way shape or form, close the programs.
+		Set up socket to log in -> 
+		Pull information needed to log in (Via USER command)-> 
+		Log in to server (With NICK command)-> 
+		Parse through information as passed in a nearly endless loop. -> 
+		When QUIT is sent in some way shape or form, close the programs.
 
 	Communcation Protocol:
 	TCP
 
 	Potential Pitfalls
 		Sockets.  Sockets tend to be a problem. (for me.)
-		Forking.  I've never forked before.  How do I fork?  Ended up not being as bad as I though until I wanted the programs to close together.  Turns out when you close one of the SDs, the other becomes / remains 3.
-		Closing gracefully.
+		Forking.  I've never forked before.  How do I fork?  Ended up not being as bad as I though until I wanted the programs to close together.  Turns out when you close one of the SDs, the other becomes / remains 3.  Decided to use a KILL command for simplicity due to time.
+		Closing gracefully.  It doesn't dump.
 
 	Test Plan:
 		User Test.  Purely user testing.  Went through with each command in the HELP menu while in my client to ensure they worked proper.
@@ -31,4 +39,6 @@
 		As of 9:44 AM on the 24th of Jun, 2016, AWAY works as intended
 
 	Conclusion:
-		While I feel more comfortable with IRC, I don't feel that much more comfortable with sockets or forking.  I'm still not sure how to properly close off a fork.  At the moment the program just kills it. (It does get closed without a dump though.) I should make it look better in the future, and more user friendly than just what you get when you telnet in.
+		I don't feel that much more comfortable with sockets or forking.  I'm still not sure how to properly close off a fork.  At the moment the program just kills it. (It does get closed without a dump though.) I should make it look better in the future, and more user friendly than just what you get when you telnet in. However, as it meets the requirements, that's where I'm at.  Better to stick with working program then mess it up when near time limit.
+
+
